@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
   <style>
     body > h1:nth-of-type(1) {
       cursor: pointer
     }
+    html {
+      height:100%;
+    }
 
     body {
+      height:100%;
       --title-bar-height: 42px;
       padding-top: var(--title-bar-height);
-      color: lime;
-      font-family: sans-serif;
+   
     }
 
     #bar {
@@ -43,10 +48,470 @@
 </head>
 <body>
   <div id="bar"><pear-ctrl></pear-ctrl></div>
-  <h1>template-ui</h1>
-  <div id="update">
-    <span style="font-size: 1.4rem;">Update Available:</span>
-    <button id="action"></button>
-  </div>
+   <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="assets/icon.png" alt="Oniri" class="logo-icon">
+                    <h1>Oniri</h1>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item active" data-view="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </li>
+                <li class="nav-item" data-view="configure">
+                    <span class="nav-icon">🔧</span>
+                    <span class="nav-label">Configure</span>
+                </li>
+                <li class="nav-item" data-view="services">
+                    <span class="nav-icon">🌐</span>
+                    <span class="nav-label">Services</span>
+                </li>
+                <li class="nav-item" data-view="logs">
+                    <span class="nav-icon">📄</span>
+                    <span class="nav-label">Logs</span>
+                </li>
+                <li class="nav-item" data-view="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">Settings</span>
+                </li>
+                <li class="nav-item" data-view="about">
+                    <span class="nav-icon">📖</span>
+                    <span class="nav-label">About</span>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Checking...</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div class="view active" id="dashboard">
+                <div class="view-header">
+                    <h2>Dashboard</h2>
+                    <p class="subtitle">Overview of your Oniri client</p>
+                </div>
+
+                <div class="cards-grid">
+                    <!-- Daemon Status Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Daemon Status</h3>
+                            <div class="status-badge" id="daemonBadge">Stopped</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="stat-row">
+                                <span class="stat-label">PID:</span>
+                                <span class="stat-value" id="daemonPid">-</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Uptime:</span>
+                                <span class="stat-value" id="daemonUptime">-</span>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" id="startBtn">Start</button>
+                                <button class="btn btn-secondary" id="stopBtn" disabled>Stop</button>
+                                <button class="btn btn-secondary" id="restartBtn" disabled>Restart</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuration Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Configuration</h3>
+                            <div class="status-badge" id="configBadge">Not Configured</div>
+                        </div>
+                        <div class="card-content">
+                            <p id="configStatus">No encryption key configured</p>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" id="configureBtn">Configure Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Services Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Services</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="stat-row">
+                                <span class="stat-label">Local Services:</span>
+                                <span class="stat-value" id="localServicesCount">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Remote Services:</span>
+                                <span class="stat-value" id="remoteServicesCount">0</span>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-secondary" id="viewServicesBtn">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Auto-Start Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Auto-Start</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="stat-row">
+                                <span class="stat-label">Launch on Boot:</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="autoLaunchToggle" class="toggle-input">
+                                    <label for="autoLaunchToggle" class="toggle-label"></label>
+                                </div>
+                            </div>
+                            <p class="help-text">Automatically start Oniri when your system boots</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configure View -->
+            <div class="view" id="configure">
+                <div class="view-header">
+                    <h2>Configure</h2>
+                    <p class="subtitle">Set up your encryption key and seed</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="configForm">
+                        <div class="form-group">
+                            <label for="password">Encryption Password</label>
+                            <input type="password" id="password" class="form-input"
+                                placeholder="Enter encryption password" required>
+                            <p class="help-text">This password encrypts your configuration</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="seed">Seed (Optional)</label>
+                            <input type="text" id="seed" class="form-input" placeholder="Enter seed for configuration">
+                            <p class="help-text">Optional seed for generating configuration</p>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">Save Configuration</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Services View -->
+            <div class="view" id="services">
+                <div class="view-header">
+                    <h2>Services</h2>
+                    <p class="subtitle">Local and remote service configurations</p>
+                </div>
+
+                <div class="services-container">
+                    <div class="service-section">
+                        <h3>🔧 Local Services</h3>
+                        <div class="table-container">
+                            <table class="services-table" id="localServicesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Transport</th>
+                                        <th>Target Host</th>
+                                        <th>Target Port</th>
+                                        <th>Topic</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="localServicesBody">
+                                    <tr class="empty-state">
+                                        <td colspan="5">No local services configured</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="service-section">
+                        <h3>🌐 Remote Services</h3>
+                        <div class="table-container">
+                            <table class="services-table" id="remoteServicesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Transport</th>
+                                        <th>Proxy Host</th>
+                                        <th>Proxy Port</th>
+                                        <th>Topic</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="remoteServicesBody">
+                                    <tr class="empty-state">
+                                        <td colspan="5">No remote services configured</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs View -->
+            <div class="view" id="logs">
+                <div class="view-header">
+                    <h2>Logs</h2>
+                    <p class="subtitle">View daemon output and error logs</p>
+                </div>
+
+                <div class="logs-container">
+                    <div class="logs-tabs">
+                        <button class="tab-btn active" data-log-type="output">Output</button>
+                        <button class="tab-btn" data-log-type="error">Errors</button>
+                        <div class="logs-actions">
+                            <button class="btn btn-secondary btn-small" id="downloadLogsBtn"
+                                title="Download Logs">⬇️</button>
+                            <button class="btn btn-secondary btn-small" id="refreshLogsBtn" title="Refresh">🔄</button>
+                        </div>
+                    </div>
+
+                    <div class="logs-content">
+                        <div id="logsEditor" class="logs-editor"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About View -->
+            <div class="view" id="about">
+                <div class="view-header">
+                    <h2>About Oniri</h2>
+                    <p class="subtitle">Learn how to use Oniri P2P Tunnel</p>
+                </div>
+
+                <div class="about-container">
+                    <!-- What is Oniri -->
+                    <div class="about-section">
+                        <h3>🌐 What is Oniri?</h3>
+                        <p>Oniri is a secure peer-to-peer tunnel client that allows you to create encrypted connections between devices without requiring public IP addresses. Perfect for accessing services remotely, bypassing NAT, and more.</p>
+                    </div>
+
+                    <!-- Getting Started -->
+                    <div class="about-section">
+                        <h3>📖 Getting Started</h3>
+                        <div class="step-list">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Configure Your Client</h4>
+                                    <p>Before using Oniri, set up your encryption key:</p>
+                                    <ul>
+                                        <li>Go to the <strong>Configure</strong> tab</li>
+                                        <li>Enter your encryption password (required)</li>
+                                        <li>Optionally enter a seed for cloud configuration</li>
+                                        <li>Click <strong>Save Configuration</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Start the Client</h4>
+                                    <p>Start the Oniri daemon to begin tunneling:</p>
+                                    <ul>
+                                        <li>Go to the <strong>Dashboard</strong> tab</li>
+                                        <li>Click the <strong>Start</strong> button</li>
+                                        <li>The daemon will run in the background</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Check Status</h4>
+                                    <p>Monitor your client and services:</p>
+                                    <ul>
+                                        <li>View daemon status on the <strong>Dashboard</strong></li>
+                                        <li>Check configured services in the <strong>Services</strong> tab</li>
+                                        <li>Monitor logs in the <strong>Logs</strong> tab</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Available Features -->
+                    <div class="about-section">
+                        <h3>✨ Available Features</h3>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">📊</div>
+                                <h4>Dashboard</h4>
+                                <p>Monitor daemon status, configuration, services, and auto-start settings at a glance</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🔧</div>
+                                <h4>Configure</h4>
+                                <p>Set up encryption keys and seeds for secure peer-to-peer connections</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🌐</div>
+                                <h4>Services</h4>
+                                <p>View and manage local and remote service configurations</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📄</div>
+                                <h4>Logs</h4>
+                                <p>View real-time output and error logs from the daemon</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">⚙️</div>
+                                <h4>Settings</h4>
+                                <p>Configure auto-start preferences and manage your configuration</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Common Tasks -->
+                    <div class="about-section">
+                        <h3>🔧 Common Tasks</h3>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <h4>Enable Auto-Start on Boot</h4>
+                                <p>Go to <strong>Settings</strong> → Enable <strong>Launch on System Boot</strong> toggle</p>
+                            </div>
+                            <div class="task-item">
+                                <h4>View Service Details</h4>
+                                <p>Go to <strong>Services</strong> tab to see all local and remote service configurations</p>
+                            </div>
+                            <div class="task-item">
+                                <h4>Check Daemon Logs</h4>
+                                <p>Go to <strong>Logs</strong> tab → Switch between Output and Errors tabs</p>
+                            </div>
+                            <div class="task-item">
+                                <h4>Restart the Daemon</h4>
+                                <p>Go to <strong>Dashboard</strong> → Click <strong>Restart</strong> button</p>
+                            </div>
+                            <div class="task-item">
+                                <h4>Reset Configuration</h4>
+                                <p>Go to <strong>Settings</strong> → Scroll to Danger Zone → Click <strong>Reset</strong></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Locations -->
+                    <div class="about-section">
+                        <h3>📁 File Locations</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <strong>Configuration:</strong>
+                                <code>~/.oniri/config.json</code>
+                            </div>
+                            <div class="info-item">
+                                <strong>Logs:</strong>
+                                <code>~/.oniri/logs/</code>
+                            </div>
+                            <div class="info-item">
+                                <strong>PID File:</strong>
+                                <code>~/.oniri/daemon.pid</code>
+                            </div>
+                            <div class="info-item">
+                                <strong>Encryption Key:</strong>
+                                <code>~/.oniri/encp.json</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips -->
+                    <div class="about-section">
+                        <h3>💡 Tips</h3>
+                        <ul class="tips-list">
+                            <li>Enable auto-start to have Oniri run automatically on boot</li>
+                            <li>Check logs regularly to monitor daemon activity</li>
+                            <li>Use the Dashboard for quick status overview</li>
+                            <li>Keep your encryption password secure and memorable</li>
+                            <li>The daemon runs in the background even when you close this window</li>
+                        </ul>
+                    </div>
+
+                    <!-- Security -->
+                    <div class="about-section">
+                        <h3>🔒 Security</h3>
+                        <ul class="tips-list">
+                            <li>All connections are end-to-end encrypted</li>
+                            <li>Your encryption key is stored locally on your device</li>
+                            <li>Use a strong password when configuring</li>
+                            <li>Never share your encryption password or seed</li>
+                            <li>Configuration files are protected by file system permissions</li>
+                        </ul>
+                    </div>
+
+                    <!-- Help -->
+                    <div class="about-section">
+                        <h3>🆘 Need Help?</h3>
+                        <ul class="tips-list">
+                            <li>Check the <strong>Logs</strong> tab for error messages</li>
+                            <li>Verify your configuration in the <strong>Configure</strong> tab</li>
+                            <li>Try restarting the daemon from the <strong>Dashboard</strong></li>
+                            <li>Reset configuration if needed from <strong>Settings</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div class="view" id="settings">
+                <div class="view-header">
+                    <h2>Settings</h2>
+                    <p class="subtitle">Application preferences</p>
+                </div>
+
+                <div class="settings-container">
+                    <div class="setting-group">
+                        <h3>Startup</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <label>Launch on System Boot</label>
+                                <p class="help-text">Start Oniri automatically when your computer starts</p>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="autoLaunchSettingToggle" class="toggle-input">
+                                <label for="autoLaunchSettingToggle" class="toggle-label"></label>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <label>Auto-Start Daemon</label>
+                                <p class="help-text">Automatically start the daemon when Oniri launches</p>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="autoStartDaemonToggle" class="toggle-input">
+                                <label for="autoStartDaemonToggle" class="toggle-label"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Danger Zone</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <label>Reset Configuration</label>
+                                <p class="help-text">Delete all local configuration and data</p>
+                            </div>
+                            <button class="btn btn-danger" id="resetBtn">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
 </body>
 </html>

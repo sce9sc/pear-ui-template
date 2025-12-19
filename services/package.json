@@ -1,0 +1,13 @@
+{
+  "name": "test-service-package",
+  "version": "0.0.65",
+  "type": "module",
+  "description": "A bare wrapper for vault management library",
+  "main": "src/index.js",
+  "license": "Apache-2.0",
+  "scripts": {},
+  "dependencies": {
+    "bare-rpc": "^1.1.0",
+    "framed-stream": "^1.0.1"
+  }
+}
