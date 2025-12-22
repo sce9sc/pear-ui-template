@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.31)
 
 find_package(cmake-pear REQUIRED PATHS node_modules/cmake-pear)
 
@@ -6,8 +6,8 @@ project(pear_appling C CXX ASM)
 
 add_pear_appling(
   pear_appling
-  ID "3otjbwt16qhk74saneu7ocmkekhnckh89ne6e33nzsbk34j3wgdo"
-  LINK "pear://3otjbwt16qhk74saneu7ocmkekhnckh89ne6e33nzsbk34j3wgdo"
+  ID "3ysp1rtmrcmbinxk4ossegdx8hm85ptksdmo3u5xq3iwsmshtspy"
+  LINK "pear://3ysp1rtmrcmbinxk4ossegdx8hm85ptksdmo3u5xq3iwsmshtspy"
   NAME "Oniri"
   VERSION 1.0.0
   AUTHOR "OniriCloud"

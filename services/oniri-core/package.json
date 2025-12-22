@@ -1,13 +1,17 @@
 {
-  "name": "test-service-package",
+  "name": "oniri-core",
   "version": "0.0.65",
   "type": "module",
   "description": "A bare wrapper for vault management library",
   "main": "src/index.js",
   "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.js"
+  },
   "scripts": {},
   "dependencies": {
     "bare-rpc": "^1.1.0",
-    "framed-stream": "^1.0.1"
+    "framed-stream": "^1.0.1",
+    "pear-pipe": "^1.0.6"
   }
 }

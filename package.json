@@ -6,19 +6,34 @@
     "pre": "pear-electron/pre",
     "name": "template-ui",
     "gui": {
-      "main": "ui/index.html",
-      "width": 900,
-      "height": 500,
-      "minWidth": 500
-    }
+      "width": 1440,
+      "height": 1024,
+      "minWidth": 600
+    },
+    "routes": ".",
+    "stage": {
+    "unrouted": [
+      "/services/oniri-core/src/app.js"
+    ],
+    "entrypoints": [
+      "services/oniri-core/src/app.js"
+    ],
+    "ignore": [
+        ".github",
+        "appling",
+        ".git",
+        ".gitignore",
+        "services"
+      ]
+  } 
   },
   "license": "Apache-2.0",
   "scripts": {
     "dev": "pear run -d .",
     "test": "brittle test/*.test.js",
     "clean": "rm -rf node_modules & rm -rf package-lock.json",
-    "refresh": "rm -rf node_modules & rm -rf package-lock.json & npm install",
-    "build": "cd ./appling & npx bare-make generate && npx bare-make build",
+    "refresh": "rm -rf node_modules && rm -rf package-lock.json && npm install",
+    "build": "cd ./appling && npx bare-make generate && npx bare-make build",
     "build:clean": "rm -rf ./appling/build"
   },
   "devDependencies": {
@@ -26,8 +41,8 @@
     "pear-interface": "^1.0.0"
   },
   "dependencies": {
-    "bare-rpc": "^1.1.0",
-    "framed-stream": "^1.0.1",
+    "dayjs": "^1.11.19",
+    "oniri-core": "file:services/oniri-core",
     "pear-bridge": "^1.2.0",
     "pear-electron": "^1.7.10"
   }

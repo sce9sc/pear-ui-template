@@ -1,21 +1,20 @@
 
 import RPC from 'bare-rpc'
 import FramedStream from 'framed-stream'
+import pipe from 'pear-pipe'
+import { API } from './api'
 
 let rpc
 
-
 export const setupIPC = () => {
-  const ipc = Pear.worker.pipe() 
+  const ipc = pipe()//Pear.worker.pipe() 
 
   ipc.on('close', async () => {
-    
     // eslint-disable-next-line no-undef
     Bare.exit(0)
   })
 
   ipc.on('end', async () => {
-   
     // eslint-disable-next-line no-undef
     Bare.exit(0)
   })
@@ -24,7 +23,16 @@ export const setupIPC = () => {
 }
 
 const handleRpcCommand = (req) => {
-    console.log('This was send to me',req)
+    //console.log('This was send to me',req.command)
+
+    switch(req.command) {
+        case API.TESTCOMMAND:
+            console.log('This was send to me',req.command)
+            req.reply(JSON.stringify({ message: 'Hello from oniri-core service!' }))
+            break
+        default:
+            req.reply(JSON.stringify({ error: 'Unknown command' }))
+    }
 }
 
 export const createRPC = (ipc) => {
@@ -44,7 +52,7 @@ export const createRPC = (ipc) => {
 
 ;(async () => {
   try {
-    console.log(typeof Pear !== 'undefined')
+    //console.log(typeof Pear !== 'undefined')
     console.log('testing service app.js started')
     const ipc = setupIPC()
     rpc = createRPC(ipc)
