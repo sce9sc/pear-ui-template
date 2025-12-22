@@ -11,20 +11,21 @@
       "minWidth": 600
     },
     "routes": ".",
-    "stage": {
     "unrouted": [
+      "/node_modules/oniri-core/src/app.js",
       "/services/oniri-core/src/app.js"
     ],
-    "entrypoints": [
-      "services/oniri-core/src/app.js"
-    ],
-    "ignore": [
-        ".github",
-        "appling",
-        ".git",
-        ".gitignore",
-        "services"
-      ]
+    "stage": {
+      "entrypoints": [
+        "services/oniri-core/src/app.js"
+      ],
+      "ignore": [
+          ".github",
+          "appling",
+          ".git",
+          ".gitignore",
+          "services"
+        ]
   } 
   },
   "license": "Apache-2.0",
@@ -34,7 +35,9 @@
     "clean": "rm -rf node_modules & rm -rf package-lock.json",
     "refresh": "rm -rf node_modules && rm -rf package-lock.json && npm install",
     "build": "cd ./appling && npx bare-make generate && npx bare-make build",
-    "build:clean": "rm -rf ./appling/build"
+    "build:clean": "rm -rf ./appling/build",
+    "run:dev":"pear run -d pear://3ysp1rtmrcmbinxk4ossegdx8hm85ptksdmo3u5xq3iwsmshtspy",
+    "run:prod":"pear run -d pear://k45ic87qhquixcc9de37jrh46oq9mk3qkup7hydfnq8ghcnwyroo"
   },
   "devDependencies": {
     "brittle": "^3.0.0",

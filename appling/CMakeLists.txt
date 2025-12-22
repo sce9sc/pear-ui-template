@@ -6,8 +6,8 @@ project(pear_appling C CXX ASM)
 
 add_pear_appling(
   pear_appling
-  ID "k45ic87qhquixcc9de37jrh46oq9mk3qkup7hydfnq8ghcnwyroo"
-  LINK "pear://k45ic87qhquixcc9de37jrh46oq9mk3qkup7hydfnq8ghcnwyroo"
+  ID "3ysp1rtmrcmbinxk4ossegdx8hm85ptksdmo3u5xq3iwsmshtspy"
+  LINK "pear://3ysp1rtmrcmbinxk4ossegdx8hm85ptksdmo3u5xq3iwsmshtspy"
   NAME "Oniri"
   VERSION 1.0.0
   AUTHOR "OniriCloud"

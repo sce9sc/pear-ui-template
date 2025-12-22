@@ -15,12 +15,14 @@ let myrpc
 const WORKLET_PATH_DEV =
     './node_modules/oniri-core/src/app.js'
 const WORKLET_PATH_PROD =
-    //Pear.config.applink +
-    'services/oniri-core/src/app.js'
+    Pear.config.applink +
+    '/services/oniri-core/src/app.js'
 
 
 const fromDisk = Pear.app.key === null
+console.log('from disk', fromDisk)
 const isDev = fromDisk && Pear.app.dev
+console.log('pear app.dev', Pear.app.dev)
 
 console.log('is dev', isDev)
 
@@ -31,7 +33,7 @@ console.log('WORKLET_PATH_PROD', WORKLET_PATH_PROD)
 const startIpc = async () => {
     try {
         const testUpdate = document.getElementById('testUpdate')
-        const ipc = pearRun(isDev ? WORKLET_PATH_DEV : WORKLET_PATH_PROD)
+        const ipc = pearRun(fromDisk ? WORKLET_PATH_DEV : WORKLET_PATH_PROD)
         testUpdate.innerText = 'IPC started'
         myrpc = new RPC(new FramedStream(ipc), (req) => {
             console.log('this is what Iget', req)
