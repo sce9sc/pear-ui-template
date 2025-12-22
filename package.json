@@ -34,10 +34,13 @@
     "test": "brittle test/*.test.js",
     "clean": "rm -rf node_modules & rm -rf package-lock.json",
     "refresh": "rm -rf node_modules && rm -rf package-lock.json && npm install",
-    "build": "cd ./appling && npx bare-make generate && npx bare-make build",
+    "build": "node run build:clean && cd ./appling && npx bare-make generate && npx bare-make build",
     "build:clean": "rm -rf ./appling/build",
+    "clean:oniri-core": "rm -rf ./services/oniri-core/node_modules && rm -rf ./services/oniri-core/package-lock.json",
+    "clean:all": "npm run clean && npm run clean:oniri-core && npm run build:clean",
     "run:dev":"pear run -d pear://3ysp1rtmrcmbinxk4ossegdx8hm85ptksdmo3u5xq3iwsmshtspy",
-    "run:prod":"pear run -d pear://k45ic87qhquixcc9de37jrh46oq9mk3qkup7hydfnq8ghcnwyroo"
+    "run:prod":"pear run -d pear://k45ic87qhquixcc9de37jrh46oq9mk3qkup7hydfnq8ghcnwyroo",
+    "install:all": "npm install && npm install --prefix services/oniri-core"
   },
   "devDependencies": {
     "brittle": "^3.0.0",
