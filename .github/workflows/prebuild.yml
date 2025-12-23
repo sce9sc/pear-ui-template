@@ -50,7 +50,7 @@ jobs:
       - name: "Release latest version"
         run: |
           pear release ${CHANNEL_LINK}
-      - run: cd ./appling
+      - run: working-directory=./appling
       - run: bare-make generate --platform ${{ matrix.platform }} --arch ${{ matrix.arch }} ${{ matrix.flags }}
       - run: bare-make build
       - run: bare-make install --strip  --prefix install/${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
