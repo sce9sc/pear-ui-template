@@ -50,10 +50,17 @@ jobs:
       - name: "Release latest version"
         run: |
           pear release ${CHANNEL_LINK}
-      - run: working-directory=./appling
-      - run: bare-make generate --platform ${{ matrix.platform }} --arch ${{ matrix.arch }} ${{ matrix.flags }}
-      - run: bare-make build
-      - run: bare-make install --strip  --prefix install/${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
+      - name: "Show bare-make version"
+        run: bare-make --version
+      - name: "Generate appling"
+        working-directory: ./appling
+        run: bare-make generate --platform ${{ matrix.platform }} --arch ${{ matrix.arch }} ${{ matrix.flags }}
+      - name: "Build appling"
+        working-directory: ./appling
+        run: bare-make build
+      - name: "Install appling"
+        working-directory: ./appling
+        run: bare-make install --strip  --prefix install/${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
