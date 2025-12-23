@@ -38,8 +38,22 @@ jobs:
         if: ${{ matrix.platform == 'win32' }}
       - run: choco install nasm
         if: ${{ matrix.platform == 'win32' }}
+      - name: Setup MSBuild and SignTool
+        uses: microsoft/setup-msbuild@v1.0.2
+        if: ${{ matrix.platform == 'win32' }}
       - name: Install Windows SDK
-        run: choco install windows-sdk-10.1
+        run: |
+          choco install windows-sdk-10.1 -y
+          # Try to find and add SignTool to PATH
+          $signtoolPath = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits" -Recurse -Name "signtool.exe" | Select-Object -First 1
+          if ($signtoolPath) {
+            $signtoolDir = Split-Path (Join-Path "C:\Program Files (x86)\Windows Kits" $signtoolPath) -Parent
+            echo $signtoolDir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            Write-Host "Added SignTool directory to PATH: $signtoolDir"
+          } else {
+            Write-Host "SignTool not found"
+          }
+        shell: powershell
         if: ${{ matrix.platform == 'win32' }}
       - run: npm install -g pear
       - run: npm install -g bare-make
