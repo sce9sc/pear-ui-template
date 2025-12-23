@@ -42,7 +42,7 @@ jobs:
       - run: choco install nasm
         if: ${{ matrix.platform == 'win32' }}
       - run: npm install -g bare-make
-      - run: npm install:all
+      - run: npm run install:all
       - name: "Stage to channel"
         run: |
           echo "CHANNEL_LINK: ${CHANNEL_LINK}"
