@@ -50,9 +50,14 @@ jobs:
           pear stage --ignore .git --no-ask ${CHANNEL_LINK} 
       - name: "Show bare-make version"
         run: bare-make --version
-      - name: "Generate appling"
+      - name: "Generate appling linux "
         working-directory: ./appling
         run: bare-make generate --platform ${{ matrix.platform }} --arch ${{ matrix.arch }}
+        if: ${{ matrix.platform == 'linux' }}
+      - name: "Generate appling windows"
+        working-directory: ./appling
+        run: bare-make generate --platform ${{ matrix.platform }} --arch ${{ matrix.arch }} -DPEAR_WINDOWS_SIGN=OFF
+        if: ${{ matrix.platform == 'win32' }}
       - name: "Build appling"
         working-directory: ./appling
         run: bare-make build
