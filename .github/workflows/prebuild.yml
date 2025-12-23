@@ -12,15 +12,6 @@ jobs:
           - os: ubuntu-22.04
             platform: linux
             arch: x64
-          - os: ubuntu-22.04-arm
-            platform: linux
-            arch: arm64
-          - os: windows-2022
-            platform: win32
-            arch: x64
-          - os: windows-2022
-            platform: win32
-            arch: arm64
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
     steps:
@@ -33,9 +24,13 @@ jobs:
         with:
           node-version: lts/*
       - run: |
+          sudo apt-get update
+          sudo apt-get install -y curl ca-certificates build-essential git libgtk-4-dev pkg-config fuse file
+          # sudo apt-get install -y clang pkg-config libgtk-4-dev clang-tools fuse file
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 20
+          npm install --install-links --legacy-peer-deps
         if: ${{ matrix.platform == 'linux' }}
       - run: sudo apt install libatomic1
         if: ${{ matrix.platform == 'linux' }}
@@ -54,13 +49,28 @@ jobs:
         run: bare-make --version
       - name: "Generate appling"
         working-directory: ./appling
-        run: bare-make generate --platform ${{ matrix.platform }} --arch ${{ matrix.arch }} ${{ matrix.flags }}
+        run: bare-make generate --platform ${{ matrix.platform }} --arch ${{ matrix.arch }}
       - name: "Build appling"
         working-directory: ./appling
         run: bare-make build
-      - name: "Install appling"
-        working-directory: ./appling
-        run: bare-make install --strip  --prefix install/${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
+      - name: Find & rename AppImage file
+        id: find_file
+        run: |
+          set -euo pipefail
+          APPIMAGE_PATH=$(find "$GITHUB_WORKSPACE" -name "*.AppImage" -type f | head -n 1)
+          echo "Original AppImage: $APPIMAGE_PATH"
+
+          NEW_NAME="Oniri-Desktop-Linux-${{ matrix.arch }}-v1.AppImage"
+          NEW_PATH="$GITHUB_WORKSPACE/$NEW_NAME"
+
+          mv "$APPIMAGE_PATH" "$NEW_PATH"
+          echo "Renamed AppImage to: $NEW_PATH"
+
+          echo "APPIMAGE_PATH=$NEW_PATH" >> "$GITHUB_OUTPUT"
+
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_OUTPUT
+        if: ${{ matrix.platform == 'linux' }}
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
