@@ -49,10 +49,7 @@ jobs:
       - name: "Stage to channel"
         run: |
           echo "CHANNEL_LINK: ${CHANNEL_LINK}"
-          pear stage --ignore .git --no-ask ${CHANNEL_LINK} .
-      - name: "Release latest version"
-        run: |
-          pear release ${CHANNEL_LINK}
+          pear stage --ignore .git --no-ask ${CHANNEL_LINK} 
       - name: "Show bare-make version"
         run: bare-make --version
       - name: "Generate appling"
