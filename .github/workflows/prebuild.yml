@@ -55,6 +55,15 @@ jobs:
           }
         shell: powershell
         if: ${{ matrix.platform == 'win32' }}
+      - name: Create temporary signing certificate
+        run: |
+          # Create a temporary self-signed certificate for code signing
+          $cert = New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=TempBuildCert" -CertStoreLocation Cert:\CurrentUser\My
+          Write-Host "Created temporary certificate with thumbprint: $($cert.Thumbprint)"
+          # Export the certificate to make it available for signing
+          Export-Certificate -Cert $cert -FilePath "TempBuildCert.cer"
+        shell: powershell
+        if: ${{ matrix.platform == 'win32' }}
       - run: npm install -g pear
       - run: npm install -g bare-make
       - run: npm run install:all
