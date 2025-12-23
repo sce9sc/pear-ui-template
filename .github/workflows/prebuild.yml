@@ -100,20 +100,22 @@ jobs:
       - name: Find & rename Win file
         id: find_file_win
         run: |
-          set -euo pipefail
-          APPIMAGE_PATH=$(find "$GITHUB_WORKSPACE" -name "*.exe" -type f | head -n 1)
-          echo "Original AppImage: $APPIMAGE_PATH"
+          $ErrorActionPreference = "Stop"
+          $APPIMAGE_PATH = Get-ChildItem -Path "$env:GITHUB_WORKSPACE" -Recurse -Name "*.exe" | Select-Object -First 1
+          $APPIMAGE_FULL_PATH = Join-Path $env:GITHUB_WORKSPACE $APPIMAGE_PATH
+          Write-Host "Original exe: $APPIMAGE_FULL_PATH"
 
-          NEW_NAME="Oniri-Desktop-Win-${{ matrix.arch }}-v1.exe"
-          NEW_PATH="$GITHUB_WORKSPACE/$NEW_NAME"
+          $NEW_NAME = "Oniri-Desktop-Win-${{ matrix.arch }}-v1.exe"
+          $NEW_PATH = Join-Path $env:GITHUB_WORKSPACE $NEW_NAME
 
-          mv "$APPIMAGE_PATH" "$NEW_PATH"
-          echo "Renamed AppImage to: $NEW_PATH"
+          Move-Item -Path $APPIMAGE_FULL_PATH -Destination $NEW_PATH
+          Write-Host "Renamed exe to: $NEW_PATH"
 
-          echo "APPIMAGE_PATH=$NEW_PATH" >> "$GITHUB_OUTPUT"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "APPIMAGE_PATH=$NEW_PATH"
 
-          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_OUTPUT
+          $TIMESTAMP = Get-Date -Format "yyyyMMdd-HHmmss"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "TIMESTAMP=$TIMESTAMP"
+        shell: powershell
         if: ${{ matrix.platform == 'win32' }}
       - uses: actions/upload-artifact@v4
         if: ${{ matrix.platform == 'linux' && steps.find_file.outputs.APPIMAGE_PATH != '' }}
