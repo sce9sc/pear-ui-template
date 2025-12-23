@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 env:
-  CHANNEL_LINK: "pear://8mzabhx3kbpq88eqy7wiuu1csjqqkry19c3di8nixu5rgt6cmupy"
+  CHANNEL_LINK: "pear://3ysp1rtmrcmbinxk4ossegdx8hm85ptksdmo3u5xq3iwsmshtspy"
 jobs:
   prebuild:
     strategy:
