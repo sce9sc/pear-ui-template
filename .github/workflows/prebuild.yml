@@ -9,8 +9,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: windows-2022
-            platform: win32
+          - os: ubuntu-22.04
+            platform: linux
             arch: x64
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
@@ -37,9 +37,6 @@ jobs:
       - run: choco upgrade llvm
         if: ${{ matrix.platform == 'win32' }}
       - run: choco install nasm
-        if: ${{ matrix.platform == 'win32' }}
-      - name: Install Windows SDK (SignTool)
-        run: choco install windows-sdk-10-version-2004-all
         if: ${{ matrix.platform == 'win32' }}
       - run: npm install -g pear
       - run: npm install -g bare-make
