@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.31)
 
 find_package(cmake-pear REQUIRED PATHS node_modules/cmake-pear)
 
-set(PEAR_WINDOWS_SIGNING OFF)
+# Disable Windows signing
+set(WINDOWS_SIGNING_SUBJECT "")
+set(WINDOWS_SIGNING_THUMBPRINT "")
 
 project(pear_appling C CXX ASM)
 
