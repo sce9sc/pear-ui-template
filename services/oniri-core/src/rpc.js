@@ -23,12 +23,11 @@ export const setupIPC = () => {
 }
 
 const handleRpcCommand = (req) => {
-    //console.log('This was send to me',req.command)
-
+   
     switch(req.command) {
         case API.TESTCOMMAND:
             console.log('This was send to me',req.command)
-            req.reply(JSON.stringify({ message: 'Hello from oniri-core service!' }))
+            req.reply(JSON.stringify({ data: 'Hello from oniri-core service!' }))
             break
         default:
             req.reply(JSON.stringify({ error: 'Unknown command' }))

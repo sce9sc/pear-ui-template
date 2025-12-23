@@ -40,7 +40,7 @@
     "clean:all": "npm run clean && npm run clean:oniri-core && npm run build:clean",
     "run:dev":"pear run -d pear://3ysp1rtmrcmbinxk4ossegdx8hm85ptksdmo3u5xq3iwsmshtspy",
     "run:prod":"pear run -d pear://k45ic87qhquixcc9de37jrh46oq9mk3qkup7hydfnq8ghcnwyroo",
-    "install:all": "npm install && npm install --prefix services/oniri-core"
+    "install:all": "npm install && npm install --prefix services/oniri-core && npm install --prefix appling"
   },
   "devDependencies": {
     "brittle": "^3.0.0",
