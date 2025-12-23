@@ -72,10 +72,10 @@ jobs:
           echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_OUTPUT
         if: ${{ matrix.platform == 'linux' }}
       - uses: actions/upload-artifact@v4
+        if: ${{ steps.find_file.outputs.APPIMAGE_PATH != '' }}
         with:
-          name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
-          path: install/${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}/bin/*
-          retention-days: 1
+          name: Oniri-Desktop-Linux-${{ matrix.arch }}-v1.AppImage
+          path: "${{ steps.find_file.outputs.APPIMAGE_PATH }}"
 
   merge:
     runs-on: ubuntu-latest
