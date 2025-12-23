@@ -9,8 +9,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-22.04
-            platform: linux
+          - os: windows-2022
+            platform: win32
             arch: x64
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
@@ -37,6 +37,9 @@ jobs:
       - run: choco upgrade llvm
         if: ${{ matrix.platform == 'win32' }}
       - run: choco install nasm
+        if: ${{ matrix.platform == 'win32' }}
+      - name: Install Windows SDK
+        run: choco install windows-sdk-10.1
         if: ${{ matrix.platform == 'win32' }}
       - run: npm install -g pear
       - run: npm install -g bare-make
