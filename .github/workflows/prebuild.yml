@@ -12,6 +12,9 @@ jobs:
           - os: ubuntu-22.04
             platform: linux
             arch: x64
+          - os: windows-2022
+            platform: win32
+            arch: x64
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
     steps:
@@ -71,11 +74,34 @@ jobs:
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
           echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_OUTPUT
         if: ${{ matrix.platform == 'linux' }}
+      - name: Find & rename Win file
+        id: find_file_win
+        run: |
+          set -euo pipefail
+          APPIMAGE_PATH=$(find "$GITHUB_WORKSPACE" -name "*.exe" -type f | head -n 1)
+          echo "Original AppImage: $APPIMAGE_PATH"
+
+          NEW_NAME="Oniri-Desktop-Win-${{ matrix.arch }}-v1.exe"
+          NEW_PATH="$GITHUB_WORKSPACE/$NEW_NAME"
+
+          mv "$APPIMAGE_PATH" "$NEW_PATH"
+          echo "Renamed AppImage to: $NEW_PATH"
+
+          echo "APPIMAGE_PATH=$NEW_PATH" >> "$GITHUB_OUTPUT"
+
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_OUTPUT
+        if: ${{ matrix.platform == 'win32' }}
       - uses: actions/upload-artifact@v4
-        if: ${{ steps.find_file.outputs.APPIMAGE_PATH != '' }}
+        if: ${{ matrix.platform == 'linux' && steps.find_file.outputs.APPIMAGE_PATH != '' }}
         with:
           name: Oniri-Desktop-Linux-${{ matrix.arch }}-v1.AppImage
           path: "${{ steps.find_file.outputs.APPIMAGE_PATH }}"
+      - uses: actions/upload-artifact@v4
+        if: ${{ matrix.platform == 'win32' && steps.find_file_win.outputs.APPIMAGE_PATH != ''}}
+        with:
+          name: Oniri-Desktop-Windows-${{ matrix.arch }}-v1
+          path: ${{ steps.find_file_win.outputs.APPIMAGE_PATH }}
 
   merge:
     runs-on: ubuntu-latest
