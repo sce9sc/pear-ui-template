@@ -12,7 +12,6 @@
     },
     "routes": ".",
     "unrouted": [
-      "/node_modules/oniri-core/src/app.js",
       "/services/oniri-core/src/app.js"
     ],
     "stage": {
@@ -23,8 +22,7 @@
           ".github",
           "appling",
           ".git",
-          ".gitignore",
-          "services"
+          ".gitignore"
         ]
   } 
   },

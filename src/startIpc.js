@@ -3,7 +3,8 @@ import pearRun from 'pear-run'
 import EventEmitter from 'events'
 import RPC from 'bare-rpc'
 import FramedStream from 'framed-stream'
-import { API, API_BY_VALUE } from '../services/oniri-core/src/index.js';
+import { API, API_BY_VALUE } from '../services/oniri-core/src/api.js';
+
 
 function getWorkletPath() {
     const fromDisk = Pear.app.key === null
@@ -77,7 +78,7 @@ export class RpcClient extends EventEmitter {
 
         this._handleError(parsedRes)
 
-        this._logger.log('Received response:', API_BY_VALUE[req.command], parsedRes)
+       this._logger.log('Received response:', API_BY_VALUE[req.command], parsedRes)
 
         return parsedRes?.data
     }

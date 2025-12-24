@@ -1,4 +1,4 @@
-import { API } from '../services/oniri-core/src/index.js';
+import { API } from '../services/oniri-core/src/api.js';
 console.log(API)
 
 import dayjs from 'dayjs'
